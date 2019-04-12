@@ -3,58 +3,53 @@
 #include "Display.hpp"
 #include "Texture.hpp"
 #include "Color.hpp"
+#include "Transparency.hpp"
 
 int main()
 {
     Game::Display d;
-    d.setColor(Game::BG_AQUA);
-
-    Game::Texture bg;
-    bg.load("clouds.txt");
-    bg.setColor(Game::FG_WHITE | Game::BG_WHITE);
+    d.setColor(Game::BG_BLACK);
 
     Game::Texture player;
     player.load("player.txt");
     player.setTransparency(Game::TRANSPARENT_BG);
-    player.setColor(Game::FG_BLACK);
+    player.setColor(Game::FG_WHITE);
 
-    int px = 0, py = 0, xvel = 1, yvel = 1;
+    Game::Texture owl;
+    owl.load("owl.txt");
+    owl.setColor(Game::FG_BLACK | Game::BG_YELLOW);
 
-    for (;;) {
-        d.clear(' ');
+    Game::Texture trunk;
+    trunk.load("trunk.txt");
+    trunk.setColor(Game::FG_BLACK | Game::BG_RED);
 
-        bg.render(d, 0, 0);
+    Game::Texture branches;
+    branches.load("branches.txt");
+    branches.setTransparency(Game::TRANSPARENT_BG);
+    branches.setColor(Game::FG_RED);
 
-        player.render(d, px, py);
-        d.writeString("- WEEEEE!", px + 4, py);
+    Game::Texture leaves;
+    leaves.load("leaves.txt");
+    leaves.setTransparency(Game::TRANSPARENT_BG);
+    leaves.setColor(Game::FG_LIGHT_GREEN);
 
-        px+=xvel;
-        py+=yvel;
+    Game::Texture moon;
+    moon.load("moon.txt");
+    moon.setColor(Game::FG_GRAY | Game::BG_WHITE);
 
-        if (xvel == 1) {
-            if (px > d.getWidth()) {
-                xvel = -1;
-            }
-        } else if (px <= 0) {
-            xvel = 1;
-        }
+    d.clear(' ');
 
-        if (yvel == 1) {
-            if (py > d.getHeight()) {
-                yvel = -1;
-            }
-        } else if (py <= 0) {
-            yvel = 1;
-        }
+    int treeX = 6;
+    int treeY = d.getHeight() - trunk.getHeight();
 
-        d.render();
+    trunk.render(d, treeX, treeY);
+    branches.render(d, treeX, treeY);
+    leaves.render(d, treeX, treeY);
+    owl.render(d, treeX + 15, treeY + 4);
+    player.render(d, 25, 22);
+    moon.render(d, 37, 13);
 
-        Sleep(5);
-
-    }
-
-
-
+    d.render();
 
     return 0;
 }

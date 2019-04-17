@@ -40,14 +40,14 @@ namespace Game {
     }
 
     void Display::setChar(char c, unsigned int x, unsigned int y) {
-        if (x <= width && y <= height) {
+        if (x < width && y < height) {
             display[y*width + x].Char.AsciiChar = c;
             display[y*width + x].Attributes = getDrawColor(x, y);
         }
     }
 
     void Display::writeString(const char* s, int x, int y) {
-        if (x > width || y > height || y < 0) {
+        if (x >= width || y >= height || y < 0) {
             return;
         }
         int pos = 0;

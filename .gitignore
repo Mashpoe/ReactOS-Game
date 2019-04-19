@@ -1,0 +1,6 @@
+*.cbp
+*.depend
+*.layout
+cmos.ram
+/bin
+/obj

@@ -6,13 +6,24 @@ GameState GameState::instance;
 void GameState::setup() {
 
     // generate the world
-    for (int x = 0; x < 20; x++) {
+    /*for (int x = 0; x < 20; x++) {
         world.push_back(std::vector<int>());
         for (int y = 0; y < 20; y++) {
             int block = y > 4? 1:0;
             world[x].push_back(block);
         }
-    }
+    }*/
+
+    world = {
+        {1,1,1,1,1,1},
+        {1,0,0,0,0,1},
+        {1,0,0,0,0,1},
+        {1,0,0,1,1,1},
+        {1,0,0,1,0,1},
+        {1,0,0,0,0,1},
+        {1,0,0,0,0,1},
+        {1,1,1,1,1,1}
+    };
 
     // load the player texture
     playerImg.load("player.txt");
@@ -71,27 +82,26 @@ void GameState::handleKeyUp(WORD keyCode) {
 void GameState::update() {
     if (up) {
         player.y--;
-        //handleCollision(&player, true, DIR_UP);
+        handleCollision(&player, true, DIR_UP);
     }
     if (down) {
         player.y++;
-        //handleCollision(&player, true, DIR_DOWN);
+        handleCollision(&player, true, DIR_DOWN);
     }
     if (left) {
         player.x--;
-        //handleCollision(&player, true, DIR_LEFT);
+        handleCollision(&player, true, DIR_LEFT);
     }
     if (right) {
         player.x++;
-        //handleCollision(&player, true, DIR_RIGHT);
+        handleCollision(&player, true, DIR_RIGHT);
     }
 }
 
 void GameState::render(Game::Display& display) {
-    display.setColor(Game::BG_RED | Game::FG_LIGHT_YELLOW);
+    display.setColor(Game::BG_AQUA | Game::FG_LIGHT_YELLOW);
     display.clear(' ');
 
-    playerImg.render(display, player.x, player.y);
 
 
     for (int x = 0; x < world.size(); x++) {
@@ -101,6 +111,8 @@ void GameState::render(Game::Display& display) {
             }
         }
     }
+
+    playerImg.render(display, player.x, player.y-1);
 }
 
 bool GameState::handleCollision(Game::Rect* entity, bool move, GameDirection dir) {

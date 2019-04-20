@@ -20,7 +20,7 @@ class GameState : public State {
 
     std::vector<std::vector<int>> world;
 
-    Game::Rect player = { 10, 10, 6, 5};
+    Game::Rect player = { 10, 10, 5, 4};
 
     Game::Texture playerImg;
 

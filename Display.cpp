@@ -108,7 +108,7 @@ namespace Game {
     bool Display::pollEvent(INPUT_RECORD* event) {
 
         if (currentInput < inputCount) {
-            *event = inputBuff[++currentInput];
+            *event = inputBuff[currentInput++];
             return true;
         }
 
@@ -133,7 +133,7 @@ namespace Game {
             return false;
         }
 
-        *event = inputBuff[currentInput];
+        *event = inputBuff[currentInput++];
 
         return true;
     }

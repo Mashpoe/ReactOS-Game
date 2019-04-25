@@ -20,7 +20,17 @@ class GameState : public State {
 
     std::vector<std::vector<int>> world;
 
-    Game::Rect player = { 10, 10, 5, 4};
+    double playerX = 10, playerY = 10;
+    Game::Rect player = { playerX, playerY, 4, 4};
+    std::vector<Game::Rect> frames = {
+        {0, 0, 4, 5},
+        {0, 5, 4, 5},
+        {0, 10, 4, 5},
+        {0, 15, 4, 5},
+        {0, 20, 4, 5},
+        {0, 25, 4, 5}
+    };
+    int currentFrame = 0;
 
     Game::Texture playerImg;
 
@@ -29,8 +39,12 @@ class GameState : public State {
     bool up = false, down = false, left = false, right = false;
 
     float xVel = 0.0f, yVel = 0.0f;
-    float acc = 0.5f;
-    float xMaxVel = 3, yMaxVel = 3;
+    float acc = 0.05f;
+    float xMaxVel = 1.0f, yMaxVel = 3.0f;
+    float gravity = 0.05f;
+    float jumpForce = 1.0f;
+
+    bool touchingGround = false;
 
 public:
 

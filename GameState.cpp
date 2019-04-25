@@ -1,5 +1,6 @@
 #include "GameState.hpp"
 #include "Color.hpp"
+#include <algorithm>
 
 GameState GameState::instance;
 
@@ -51,9 +52,11 @@ void GameState::handleKeyDown(WORD keyCode) {
         break;
     case VK_LEFT:
         left = true;
+        currentFrame = 0;
         break;
     case VK_RIGHT:
         right = true;
+        currentFrame = 3;
         break;
     case 0x51:
         game->quit();
@@ -80,22 +83,63 @@ void GameState::handleKeyUp(WORD keyCode) {
 }
 
 void GameState::update() {
-    if (up) {
-        player.y--;
-        handleCollision(&player, true, DIR_UP);
+
+    if (xVel != 0 && !left && !right) {
+        if (xVel > 0) {
+            xVel = std::max<float>(xVel - acc, 0);
+        } else {
+            xVel = std::min<float>(xVel + acc, 0);
+        }
+    } else {
+
+        if (left && xVel > -xMaxVel) {
+            xVel = std::max<float>(xVel - acc, -xMaxVel);
+        }
+
+        if (right && xVel < xMaxVel) {
+            xVel = std::min<float>(xVel + acc, xMaxVel);
+        }
+
     }
-    if (down) {
-        player.y++;
-        handleCollision(&player, true, DIR_DOWN);
+
+    playerX += xVel;
+
+    if (abs(playerX - (double)player.x) >= 1) {
+        player.x = (int)playerX;
+
+        GameDirection dir = (xVel > 0) ? DIR_RIGHT:DIR_LEFT;
+        if (handleCollision(&player, true, dir)) {
+            xVel = 0;
+            playerX = player.x;
+        }
     }
-    if (left) {
-        player.x--;
-        handleCollision(&player, true, DIR_LEFT);
+
+    if (up && touchingGround) {
+        yVel -= jumpForce;
+    } else if (yVel < yMaxVel) {
+        yVel = std::min<float>(yVel + gravity, xMaxVel);
     }
-    if (right) {
-        player.x++;
-        handleCollision(&player, true, DIR_RIGHT);
+
+    playerY += yVel;
+
+    if (abs(playerY - (double)player.y) >= 1) {
+        player.y = (int)playerY;
+
+        if (yVel > 0) {
+            touchingGround = handleCollision(&player, true, DIR_DOWN);
+            if (touchingGround) {
+                yVel = 0;
+                playerY = player.y;
+            }
+        } else {
+            if (handleCollision(&player, true, DIR_UP)) {
+                yVel = 0;
+                playerY = player.y;
+            }
+            touchingGround = false;
+        }
     }
+
 }
 
 void GameState::render(Game::Display& display) {
@@ -112,7 +156,7 @@ void GameState::render(Game::Display& display) {
         }
     }
 
-    playerImg.render(display, player.x, player.y-1);
+    playerImg.render(display, player.x, player.y-1, &frames[currentFrame]);
 }
 
 bool GameState::handleCollision(Game::Rect* entity, bool move, GameDirection dir) {

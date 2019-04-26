@@ -12,6 +12,13 @@ enum GameDirection {
     DIR_RIGHT
 };
 
+struct Entity {
+    double x;
+    double y;
+    double w;
+    double h;
+};
+
 class GameState : public State {
 
     static GameState instance;
@@ -20,8 +27,8 @@ class GameState : public State {
 
     std::vector<std::vector<int>> world;
 
-    double playerX = 10, playerY = 10;
-    Game::Rect player = { playerX, playerY, 4, 4};
+    //double playerX = 10, playerY = 10;
+    Entity player = { 10, 10, 4, 4};
     std::vector<Game::Rect> frames = {
         {0, 0, 4, 5},
         {0, 5, 4, 5},
@@ -62,7 +69,7 @@ public:
 
     // if move is true, the entity will be moved
     // outside of the block it's touching based on its direction
-    bool handleCollision(Game::Rect* entity, bool move = false, GameDirection dir = DIR_UP);
+    bool handleCollision(Entity* e, bool move = false, GameDirection dir = DIR_UP);
 
 protected:
     GameState() {}; // protected constructor for singleton

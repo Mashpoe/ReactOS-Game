@@ -1,6 +1,7 @@
 #include "GameState.hpp"
 #include "Color.hpp"
 #include <algorithm>
+#include <math.h>
 
 GameState GameState::instance;
 
@@ -102,42 +103,36 @@ void GameState::update() {
 
     }
 
-    playerX += xVel;
+    player.x += xVel;
 
-    if (abs(playerX - (double)player.x) >= 1) {
-        player.x = (int)playerX;
-
-        GameDirection dir = (xVel > 0) ? DIR_RIGHT:DIR_LEFT;
-        if (handleCollision(&player, true, dir)) {
-            xVel = 0;
-            playerX = player.x;
-        }
+    if (xVel != 0 &&
+        handleCollision(
+            &player,
+            true,
+            (xVel > 0) ? DIR_RIGHT:DIR_LEFT
+        ))
+    {
+        xVel = 0;
     }
 
     if (up && touchingGround) {
         yVel -= jumpForce;
     } else if (yVel < yMaxVel) {
-        yVel = std::min<float>(yVel + gravity, xMaxVel);
+        yVel = std::min<float>(yVel + gravity, yMaxVel);
     }
 
-    playerY += yVel;
+    player.y += yVel;
 
-    if (abs(playerY - (double)player.y) >= 1) {
-        player.y = (int)playerY;
-
-        if (yVel > 0) {
-            touchingGround = handleCollision(&player, true, DIR_DOWN);
-            if (touchingGround) {
-                yVel = 0;
-                playerY = player.y;
-            }
-        } else {
-            if (handleCollision(&player, true, DIR_UP)) {
-                yVel = 0;
-                playerY = player.y;
-            }
-            touchingGround = false;
+    if (yVel > 0) {
+        touchingGround = handleCollision(&player, true, DIR_DOWN);
+        if (touchingGround) {
+            yVel = 0;
         }
+    } else if (yVel < 0) {
+        if (handleCollision(&player, true, DIR_UP)) {
+            yVel = 0;
+        }
+        touchingGround = false;
     }
 
 }
@@ -159,10 +154,10 @@ void GameState::render(Game::Display& display) {
     playerImg.render(display, player.x, player.y-1, &frames[currentFrame]);
 }
 
-bool GameState::handleCollision(Game::Rect* entity, bool move, GameDirection dir) {
+bool GameState::handleCollision(Entity* e, bool move, GameDirection dir) {
 
-    for (int x = entity->x/TILE_WIDTH; x < (entity->x+entity->w-1)/TILE_WIDTH + 1; x++) {
-        for (int y = entity->y/TILE_HEIGHT; y < (entity->y+entity->h-1)/TILE_HEIGHT + 1; y++) {
+    for (int x = e->x/TILE_WIDTH; x < (int)((e->x+e->w-1)/TILE_WIDTH) + 1; x++) {
+        for (int y = e->y/TILE_HEIGHT; y < (int)((e->y+e->h-1)/TILE_HEIGHT) + 1; y++) {
 
             if (move) {
                 // do bounds checking
@@ -170,16 +165,16 @@ bool GameState::handleCollision(Game::Rect* entity, bool move, GameDirection dir
                     if (world[x][y] > 0) {
                         switch (dir) {
                         case DIR_UP:
-                            entity->y = (y+1) * TILE_HEIGHT;
+                            e->y = (y+1) * TILE_HEIGHT;
                             break;
                         case DIR_DOWN:
-                            entity->y = y*TILE_HEIGHT - entity->h;
+                            e->y = y*TILE_HEIGHT - e->h;
                             break;
                         case DIR_LEFT:
-                            entity->x = (x+1) * TILE_WIDTH;
+                            e->x = (x+1) * TILE_WIDTH;
                             break;
                         case DIR_RIGHT:
-                            entity->x = x*TILE_WIDTH - entity->w;
+                            e->x = x*TILE_WIDTH - e->w;
                             break;
                         }
                         return true;

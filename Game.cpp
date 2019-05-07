@@ -19,7 +19,10 @@ void StateManager::update() {
                 } else {
                     states.back()->handleKeyUp(event.Event.KeyEvent.wVirtualKeyCode);
                 }
-            break;
+                break;
+            case MOUSE_EVENT:
+                states.back()->handleMouseEvent(&event.Event.MouseEvent);
+                break;
             }
         }
 

@@ -32,13 +32,25 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Chunk.hpp" />
+		<Unit filename="Color.hpp" />
 		<Unit filename="Display.cpp" />
 		<Unit filename="Display.hpp" />
+		<Unit filename="Entity.hpp" />
+		<Unit filename="Game.cpp" />
+		<Unit filename="Game.hpp" />
+		<Unit filename="GameState.cpp" />
+		<Unit filename="GameState.hpp" />
+		<Unit filename="IntroState.cpp" />
+		<Unit filename="IntroState.hpp" />
 		<Unit filename="Rect.hpp" />
+		<Unit filename="State.hpp" />
 		<Unit filename="Texture.cpp" />
 		<Unit filename="Texture.hpp" />
+		<Unit filename="Tile.hpp" />
 		<Unit filename="Transparency.hpp" />
-		<Unit filename="Color.hpp" />
+		<Unit filename="World.cpp" />
+		<Unit filename="World.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

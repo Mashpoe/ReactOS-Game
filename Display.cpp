@@ -8,7 +8,7 @@ namespace Game {
     : window(window), input(input)
     {
 
-        SetConsoleMode(input, 0);
+        SetConsoleMode(input, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);
 
         // get the console size in characters
         CONSOLE_SCREEN_BUFFER_INFO csbi;

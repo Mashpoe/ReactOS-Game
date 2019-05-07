@@ -3,6 +3,7 @@
 
 #include "Game.hpp"
 #include "Display.hpp"
+#include <Windows.h>
 
 class State {
 protected:
@@ -18,6 +19,7 @@ public:
 
     virtual void handleKeyDown(WORD keyCode) = 0; // virtual key code
     virtual void handleKeyUp(WORD keyCode) = 0; // virtual key code
+    virtual void handleMouseEvent(MOUSE_EVENT_RECORD* event) {};
 
     virtual void update() = 0;
     virtual void render(Game::Display& display) = 0;

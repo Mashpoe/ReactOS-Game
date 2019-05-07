@@ -28,6 +28,8 @@ public:
     void quit() { isRunning = false; }
     bool running() { return isRunning; }
 
+    Game::Display& getDisplay() { return display; }
+
 };
 
 #endif // GAME_HPP_INCLUDED

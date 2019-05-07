@@ -3,6 +3,8 @@
 
 #include "State.hpp"
 #include "Texture.hpp"
+#include "World.hpp"
+#include "Entity.hpp"
 #include <vector>
 
 enum GameDirection {
@@ -12,23 +14,14 @@ enum GameDirection {
     DIR_RIGHT
 };
 
-struct Entity {
-    double x;
-    double y;
-    double w;
-    double h;
-};
-
 class GameState : public State {
 
     static GameState instance;
 
-    static const int TILE_WIDTH = 8, TILE_HEIGHT = 4;
-
-    std::vector<std::vector<int>> world;
+    World world;
 
     //double playerX = 10, playerY = 10;
-    Entity player = { 10, 10, 4, 4};
+    Entity player = { 0, 0, 4, 4};
     std::vector<Game::Rect> frames = {
         {0, 0, 4, 5},
         {0, 5, 4, 5},
@@ -43,7 +36,15 @@ class GameState : public State {
 
     Game::Texture blocks;
 
-    bool up = false, down = false, left = false, right = false;
+    bool up = false,
+         down = false,
+         left = false,
+         right = false,
+         jump = false,
+         mouseLeft = false,
+         mouseRight = false;
+
+    int mouseX, mouseY;
 
     float xVel = 0.0f, yVel = 0.0f;
     float acc = 0.05f;
@@ -53,12 +54,15 @@ class GameState : public State {
 
     bool touchingGround = false;
 
+    int camX, camY;
+
 public:
 
     void cleanup();
 
     void handleKeyDown(WORD keyCode);
     void handleKeyUp(WORD keyCode);
+    void handleMouseEvent(MOUSE_EVENT_RECORD* event);
 
     void update();
     void render(Game::Display& display);
